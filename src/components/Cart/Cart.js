@@ -8,8 +8,15 @@ import classes from './Cart.module.css';
 
 const Cart = (props) => {
   const cartCtx = useContext(CartContext);
-  const addItem = (item) => {};
-  const removeItem = (id) => {};
+
+  const total = `$${cartCtx.totalAmount.toFixed(2)}`;
+
+  const addItem = (item) => {
+    cartCtx.addItem({ ...item, amount: 1 });
+  };
+  const removeItem = (id) => {
+    cartCtx.removeItem(id);
+  };
 
   const cartItems = (
     <ul className={classes['cart-items']}>
@@ -17,8 +24,8 @@ const Cart = (props) => {
         <CartItem
           key={item.id}
           {...item}
-          onAdd={addItem}
-          onRemove={removeItem}
+          onAdd={addItem.bind(null, item)}
+          onRemove={removeItem.bind(null, item.id)}
         />
       ))}
     </ul>
@@ -29,7 +36,7 @@ const Cart = (props) => {
   return (
     <Modal onCloseChat={props.onCloseChat}>
       {cartItems}
-      <div className={classes.total}>Total amount: 35.5</div>
+      <div className={classes.total}>Total amount: {total}</div>
       <div className={classes.actions}>
         <button onClick={props.onCloseChat} className={classes['button--alt']}>
           Close
